@@ -1,7 +1,5 @@
 # x
 <p align="center">
-
-![Dart CI](https://github.com/yashimself/x/workflows/Dart%20CI/badge.svg)
+ ![CI](https://github.com/yashimself/x/workflows/CI/badge.svg?branch=master&event=push)
 <img src="https://img.shields.io/badge/license-GPT-blue">
-
 </p>
