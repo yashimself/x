@@ -24,17 +24,31 @@ class DatabaseService {
   }
 
   createChatRoom(String ChatRoomid, chatRoomMap){
-    Firestore.instance.collection("ChatRoom")
-        .document(ChatRoomid).setData(chatRoomMap).catchError((e){
+    Firestore.instance
+        .collection("ChatRoom")
+        .document(ChatRoomid)
+        .setData(chatRoomMap)
+        .catchError((e){
           print(e.toString());
     });
   }
 
-  getMessages(String ChatroomId, MessageMap){
+  addMessages(String ChatroomId, MessageMap){
     Firestore.instance.collection("ChatRoom")
         .document(ChatroomId)
         .collection("chats")
-        .add(MessageMap).catchError((e){print(e.toString());});
+        .add(MessageMap).catchError((e){
+          print(e.toString());
+        });
   }
+
+  getMessages(String ChatroomId) async{
+   return await Firestore.instance.collection("ChatRoom")
+        .document(ChatroomId)
+        .collection("chats")
+   .orderBy("time", descending: true)
+        .snapshots();
+  }
+
 
 }

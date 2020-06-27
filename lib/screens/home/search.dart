@@ -20,44 +20,50 @@ class _SearchState extends State<Search> {
   DatabaseService databaseService = new DatabaseService();
 
   QuerySnapshot searchsnapshot;
+  bool haveUserSearched = false;
 
 
-
-  initiateSearch(){
-    databaseService.dbDownstream(searchTextEditingController.text).then((val){
-      setState(() {
-        searchsnapshot = val;
+  initiateSearch() async{
+    if(searchTextEditingController.text.isNotEmpty){
+      await databaseService.dbDownstream(searchTextEditingController.text).then((val){
+        setState(() {
+          searchsnapshot = val;
+          print(searchsnapshot);
+          haveUserSearched = true;
+        });
       });
-    });
+    }
   }
 
-  CreateChatRoomandStartconvo ({String username}){
+  CreateChatRoomandStartconvo (String username){
+
+    List<String> users = [username, Constants.myName];
 
     String chatRoomId = getChatRoomId(username, Constants.myName);
-    List<String> users = [username, Constants.myName];
     Map<String, dynamic> chatRoomMap = {
       "users" : users,
       "chatroomId" : chatRoomId
     };
     DatabaseService().createChatRoom(chatRoomId, chatRoomMap);
     Navigator.push (context, MaterialPageRoute(
-        builder: (context) => ConversationScreen()
+        builder: (context) => ConversationScreen(
+          ChatRoomId : chatRoomId
+        )
     ));
   }
 
 
 
   Widget searchList(){
-    return searchsnapshot!= null ? ListView.builder(
+    return haveUserSearched ? ListView.builder(
+      shrinkWrap: true,
       itemCount: searchsnapshot.documents.length,
-        shrinkWrap: true,
         itemBuilder: (context, index){
         return SearchTile(
           userName: searchsnapshot.documents[index].data["name"],
           userEmail: searchsnapshot.documents[index].data["email"],
         );
-      }) : Container(
-    );
+      }) : Container();
   }
 
   Widget SearchTile({String userName, String userEmail}){
@@ -83,9 +89,7 @@ class _SearchState extends State<Search> {
               setState(() {
                 secondname = userName;
               });
-              CreateChatRoomandStartconvo(
-                username: userName
-              );
+              CreateChatRoomandStartconvo(userName);
             },
             child: Container(
               decoration: BoxDecoration(

@@ -15,34 +15,55 @@ class ConversationScreen extends StatefulWidget {
 
 class _ConversationScreenState extends State<ConversationScreen> {
 
+  Stream chatMessageStream;
   DatabaseService databaseService = new DatabaseService();
   TextEditingController messageController = new TextEditingController();
 
   String secondname = "";
-  @override
-  void initState() {
-    getsecondname();
-    super.initState();
-  }
-  getsecondname (){
-    setState(() {
+
+  getsecondname () {
+     setState(() {
       secondname = senduname();
     });
   }
 
   Widget ChatMessageList(){
-
+    return StreamBuilder(
+      stream: chatMessageStream,
+      builder: (context, snapshot){
+        return snapshot.hasData ? ListView.builder(
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, index){
+              return MessageTile(snapshot.data.documents[index].data["message"]);
+            }) : Container();
+      },
+    );
   }
 
   sendMessage(){
 
     if(messageController.text.isNotEmpty){
-      Map<String,String> messageMap = {
+      Map<String,dynamic> messageMap = {
+        "Sent_by" : Constants.myName,
         "message" : messageController.text,
-        "Sent by" : Constants.myName
+        "time" : DateTime.now().millisecondsSinceEpoch
       };
-      databaseService.getMessages(widget.ChatRoomId, messageMap);
+      DatabaseService().addMessages(widget.ChatRoomId, messageMap);
+      setState(() {
+        messageController.text = "";
+      });
     }
+  }
+
+  @override
+  void initState() {
+    DatabaseService().getMessages(widget.ChatRoomId).then((value){
+      setState(() {
+        chatMessageStream = value;
+      });
+    });
+    getsecondname();
+    super.initState();
   }
 
   @override
@@ -56,6 +77,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
       body: Container(
         child: Stack(
           children: [
+            ChatMessageList(),
             Container(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -101,3 +123,22 @@ class _ConversationScreenState extends State<ConversationScreen> {
     );
   }
 }
+
+class MessageTile extends StatelessWidget {
+
+  final String message;
+  MessageTile(this.message);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Text(message,
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 20
+      ),
+      ),
+    );
+  }
+}
+
