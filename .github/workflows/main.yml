@@ -30,7 +30,8 @@ jobs:
       with:
         flutter-version: '1.17.3'
     - run: flutter pub get
-    - run: flutter build apk --debug --split-per-abi
+    - run: flutter build apk --release --split-per-abi
+    - run: flutter build appbundle
     - name: Upload artifact
     - uses: actions/upload-artifact@v2
       with:
@@ -38,5 +39,12 @@ jobs:
     - name: Create a Release APK
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "build/app/outputs/apk/debug/*.apk"
+        artifacts: "build/app/outputs/apk/release/*.apk,build/app/outputs/bundle/release/app-release.aab"
         token: ${{ secrets.TOKEN }}
+        tag: 0.0.1  
+        commit: ${{github.sha}}
+    - name: Upload app bundle
+      uses: actions/upload-artifact@v2
+      with:
+        name: appbundle
+        path: build/app/outputs/bundle/release/app-release.aab
