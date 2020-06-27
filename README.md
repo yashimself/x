@@ -7,7 +7,5 @@
 
 
 
-<p>
-Made possible with <img src="assets/images/GitHub-Logos/GitHub_Logo.png"
-</p>
+
 </p>
