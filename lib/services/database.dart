@@ -46,8 +46,13 @@ class DatabaseService {
    return await Firestore.instance.collection("ChatRoom")
         .document(ChatroomId)
         .collection("chats")
-   .orderBy("time", descending: true)
+   .orderBy("time", descending: false)
         .snapshots();
+  }
+
+  getChatrooms(String username){
+    return Firestore.instance
+        .collection("ChatRoom");
   }
 
 

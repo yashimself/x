@@ -34,7 +34,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
         return snapshot.hasData ? ListView.builder(
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index){
-              return MessageTile(snapshot.data.documents[index].data["message"]);
+              return MessageTile(snapshot.data.documents[index].data["message"],
+                  snapshot.data.documents[index].data["Sent_by"]==Constants.myName);
             }) : Container();
       },
     );
@@ -71,9 +72,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(secondname,),
-        backgroundColor: Color(0xFF222831),
+        backgroundColor: Colors.black12,
       ),
-      backgroundColor: Color(0xFFa6dcef),
+      backgroundColor: Color(0xFF222831),
       body: Container(
         child: Stack(
           children: [
@@ -81,7 +82,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
             Container(
               alignment: Alignment.bottomCenter,
               child: Container(
-                color: Color(0xFFddf3f5),
+                color: Color.fromRGBO(0xFFdd,0xFFf3,0xFFf5,0.5),
                 padding: EdgeInsets.symmetric(vertical: 24,horizontal: 16),
                 child: Row(
                   children: <Widget>[
@@ -89,7 +90,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         child: TextField(
                           controller: messageController,
                           decoration: InputDecoration(
-                              fillColor: Color(0xFFddf3f5),
+                              fillColor: Color.fromRGBO(0xFFdd,0xFFf3,0xFFf5,0.5),
                               filled: false,
                               contentPadding: EdgeInsets.all(12.0),
                               hintText: 'Message',
@@ -98,7 +99,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           ),
                         )
                     ),
-                    SizedBox(width: 8,),
+
                     Container(
                       width: 60,
                       height: 25,
@@ -127,16 +128,36 @@ class _ConversationScreenState extends State<ConversationScreen> {
 class MessageTile extends StatelessWidget {
 
   final String message;
-  MessageTile(this.message);
+  MessageTile(this.message,this.isSentByMe);
+  final bool isSentByMe;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text(message,
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 20
-      ),
+      padding: EdgeInsets.only(left: isSentByMe ? 0 : 20, right: isSentByMe ? 20 : 0),
+      margin: EdgeInsets.symmetric(vertical: 8),
+      width: MediaQuery.of(context).size.width,
+      alignment: isSentByMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 10,horizontal: 8),
+        decoration: BoxDecoration(
+          color: isSentByMe ? Colors.amberAccent : Colors.blue,
+          borderRadius: isSentByMe ? BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+            bottomLeft: Radius.circular(20)
+          ) : BorderRadius.only(
+            topRight: Radius.circular(20),
+            topLeft: Radius.circular(20),
+            bottomRight: Radius.circular(20)
+          )
+        ),
+        child: Text(message,
+        style: TextStyle(
+          color: isSentByMe ? Colors.black87 : Colors.white,
+          fontSize: 15
+        ),
+        ),
       ),
     );
   }
