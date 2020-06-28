@@ -35,18 +35,21 @@ jobs:
     - name: Upload app bundle
       uses: actions/upload-artifact@v2
       with:
-        name: appbundle
         path: build/app/outputs/bundle/release/app-release.aab
     - name: Upload app apk
       uses: actions/upload-artifact@v2
       with:
-        name: app apk
+        name: X.apk
         path: build/app/outputs/apk/release/app-release.apk
+    - name: Bump version and push tag
+      uses: mathieudutour/github-tag-action@v4.5
+      with:
+        github_token: ${{ secrets.TOKEN }}
     - name: Create app bundle Release
       uses: actions/create-release@v1.1.1
       with:
         artifacts: "build/app/outputs/bundle/release/app-release.aab"
-        tag_name: ${{ github.ref }}
+        tag_name: ${{ new_tag }}
         release_name: Release ${{ github.ref }}
         token: ${{ secrets.TOKEN }}
         commit: ${{github.sha}}
