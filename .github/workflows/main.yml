@@ -49,7 +49,7 @@ jobs:
       uses: actions/create-release@v1.1.1
       with:
         artifacts: "build/app/outputs/bundle/release/app-release.aab"
-        tag_name: ${{ new_tag }}
+        tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
         token: ${{ secrets.TOKEN }}
         commit: ${{github.sha}}
