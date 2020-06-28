@@ -60,7 +60,7 @@ jobs:
     #Create bundle release
     
     - name: Create Release
-      uses: actions/create-release@v1.1.1
+      uses: ncipollo/release-action@v1
       with:
         artifacts: "build/app/outputs/bundle/release/app-release.aab,build/app/outputs/apk/release/app-release.apk"
         tag_name: ${{ steps.push_tags.outputs.new_tag }}
