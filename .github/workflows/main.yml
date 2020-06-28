@@ -30,25 +30,12 @@ jobs:
       with:
         flutter-version: '1.17.3'
     - run: flutter pub get
-    - run: flutter build appbundle
     - run: flutter build apk
-    - name: Upload app bundle
-      uses: actions/upload-artifact@v2
-      with:
-        name: app-bundle
-        path: build/app/outputs/bundle/release/app-release.aab
     - name: Upload app apk
       uses: actions/upload-artifact@v2
       with:
-        name: app-release 
+        name: app-release.apk
         path: build/app/outputs/apk/release/app-release.apk
-  release:
-    needs: [build]
-    name: Create a release
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v1
     
     #Create tag
     
@@ -57,7 +44,6 @@ jobs:
       uses: mathieudutour/github-tag-action@v4.5
       with:
         github_token: ${{ secrets.TOKEN }}
-    - run:  echo ::set-output name=tags::new_tag
       
     #Create bundle release
     
