@@ -30,7 +30,6 @@ jobs:
       with:
         flutter-version: '1.17.3'
     - run: flutter pub get
-    - run: flutter build apk --release --split-per-abi
     - run: flutter build appbundle
     - run: flutter build apk
     - name: Upload app bundle
