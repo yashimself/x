@@ -42,6 +42,7 @@ jobs:
         name: X.apk
         path: build/app/outputs/apk/release/app-release.apk
   release:
+    needs: [build]
     name: Create a release
     runs-on: ubuntu-latest
     
@@ -64,6 +65,7 @@ jobs:
       with:
         artifacts: "build/app/outputs/bundle/release/app-release.aab"
         tag_name: ${{ steps.push_tags.outputs.new_tag }}
+        release_name: ${{ steps.push_tags.outputs.new_version }}
         token: ${{ secrets.TOKEN }}
         commit: ${{ github.sha }}
     - name: Create app apk Release
@@ -71,6 +73,7 @@ jobs:
       with:
         artifacts: "build/app/outputs/apk/release/app-release.apk"
         tag_name: ${{ steps.push_tags.outputs.new_tag }}
+        release_name: ${{ steps.push_tags.outputs.new_version }}
         token: ${{ secrets.TOKEN }}
         commit: ${{ github.sha }}
   
