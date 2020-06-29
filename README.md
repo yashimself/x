@@ -15,14 +15,13 @@
 
 # Screenshots
 
-![Screenshot 1|480x360,10%](assets/screenshots/Screenshot_20200630-002423_framed.png)
-<img src="assets/screenshots/Screenshot_20200630-002423_framed.png" alt="Screenshot 1" height:"120" width: "80">
-<img src="assets/screenshots/Screenshot_20200630-002426_framed.png" alt="Screenshot 2" height:"120" width: "80">
-<img src="assets/screenshots/Screenshot_20200630-004428_framed.png" alt="Screenshot 3" height:"120" width: "80">
-<img src="assets/screenshots/Screenshot_20200630-004432_framed.png" alt="Screenshot 4" height:"120" width: "80">
-<img src="assets/screenshots/Screenshot_20200630-002519_framed.png" alt="Screenshot 5" height:"120" width: "80">
-<img src="assets/screenshots/Screenshot_20200630-004708_framed.png" alt="Screenshot 6" height:"120" width: "80">
-<img src="assets/screenshots/Screenshot_20200630-002555_framed.png" alt="Screenshot 7" height:"120" width: "80">
+![Screenshot 1|180x80,20%](assets/screenshots/Screenshot_20200630-002423_framed.png)
+![Screenshot 2|180x80,20%](assets/screenshots/Screenshot_20200630-002426_framed.png)
+![Screenshot 3|180x80,20%](assets/screenshots/Screenshot_20200630-004428_framed.png)
+![Screenshot 4|180x80,20%](assets/screenshots/Screenshot_20200630-004432_framed.png)
+![Screenshot 5|180x80,20%](assets/screenshots/Screenshot_20200630-002519_framed.png)
+![Screenshot 6|180x80,20%](assets/screenshots/Screenshot_20200630-004708_framed.png)
+![Screenshot 7|180x80,20%](assets/screenshots/Screenshot_20200630-002555_framed.png)
 
 # Getting Started
 
