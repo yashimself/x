@@ -15,13 +15,13 @@
 
 # Screenshots
 
-<img src="assets/screenshots/Screenshot_20200630-002423_framed.png" height:"80" width: "80">
-<img src="assets/screenshots/Screenshot_20200630-002426_framed.png" height:"80" width: "80">
-<img src="assets/screenshots/Screenshot_20200630-004428_framed.png" height:"80" width: "80">
-<img src="assets/screenshots/Screenshot_20200630-004432_framed.png" height:"80" width: "80">
-<img src="assets/screenshots/Screenshot_20200630-002519_framed.png" height:"80" width: "80">
-<img src="assets/screenshots/Screenshot_20200630-004708_framed.png" height:"80" width: "80">
-<img src="assets/screenshots/Screenshot_20200630-002555_framed.png" height:"80" width: "80">
+<img src="assets/screenshots/Screenshot_20200630-002423_framed.png" alt="Screenshot 1" height:"120" width: "80">
+<img src="assets/screenshots/Screenshot_20200630-002426_framed.png" alt="Screenshot 2" height:"120" width: "80">
+<img src="assets/screenshots/Screenshot_20200630-004428_framed.png" alt="Screenshot 3" height:"120" width: "80">
+<img src="assets/screenshots/Screenshot_20200630-004432_framed.png" alt="Screenshot 4" height:"120" width: "80">
+<img src="assets/screenshots/Screenshot_20200630-002519_framed.png" alt="Screenshot 5" height:"120" width: "80">
+<img src="assets/screenshots/Screenshot_20200630-004708_framed.png" alt="Screenshot 6" height:"120" width: "80">
+<img src="assets/screenshots/Screenshot_20200630-002555_framed.png" alt="Screenshot 7" height:"120" width: "80">
 
 # Getting Started
 
