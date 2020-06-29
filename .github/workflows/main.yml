@@ -30,21 +30,29 @@ jobs:
       with:
         flutter-version: '1.17.3'
     - run: flutter pub get
-    - run: flutter build apk --release --split-per-abi
-    - run: flutter build appbundle
-    - name: Upload artifact
-    - uses: actions/upload-artifact@v2
-      with:
-        name: release-apk
-    - name: Create a Release APK
-      uses: ncipollo/release-action@v1
-      with:
-        artifacts: "build/app/outputs/apk/release/*.apk,build/app/outputs/bundle/release/app-release.aab"
-        token: ${{ secrets.TOKEN }}
-        tag: 0.0.1  
-        commit: ${{github.sha}}
-    - name: Upload app bundle
+    - run: flutter build apk
+    - name: Upload app apk
       uses: actions/upload-artifact@v2
       with:
-        name: appbundle
-        path: build/app/outputs/bundle/release/app-release.aab
+        name: app-release.apk
+        path: build/app/outputs/apk/release/app-release.apk
+    
+    #Create tag
+    
+    - name: Bump version and push tag
+      id: push_tags
+      uses: mathieudutour/github-tag-action@v4.5
+      with:
+        github_token: ${{ secrets.TOKEN }}
+      
+    #Create bundle release
+    
+    - name: Create Release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: build/app/outputs/apk/release/app-release.apk
+        tag: ${{ steps.push_tags.outputs.new_tag }}
+        name: ${{ steps.push_tags.outputs.new_version }}
+        token: ${{ secrets.TOKEN }}
+        commit: ${{ github.sha }}
+  
