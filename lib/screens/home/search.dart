@@ -2,8 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:x/services/database.dart';
+import 'package:x/shared/colors.dart';
 import 'package:x/shared/skeleton.dart';
 import 'package:x/screens/home/conversations.dart';
+import 'package:x/screens/home/home.dart';
+
 
 class Search extends StatefulWidget {
   @override
@@ -45,10 +48,23 @@ class _SearchState extends State<Search> {
       "chatroomId" : chatRoomId
     };
     DatabaseService().createChatRoom(chatRoomId, chatRoomMap);
-    Navigator.push (context, MaterialPageRoute(
-        builder: (context) => ConversationScreen(
-          ChatRoomId : chatRoomId
-        )
+    Navigator.push (context, PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => ConversationScreen(
+          ChatRoomId : chatRoomId,
+          secondname: username,
+        ),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(0.0, 1.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     ));
   }
 
@@ -76,11 +92,14 @@ class _SearchState extends State<Search> {
             children: <Widget>[
               Text(userName,
                 style: TextStyle(
-                  //color: Color(),
                   fontSize: 18,
+                  color: isDarkMode ? Colors.white : Colors.black87
                 ),
               ),
-              Text(userEmail)
+              Text(userEmail,
+              style: TextStyle(
+                color: isDarkMode ? Colors.white : Colors.black87
+              ),)
             ],
           ),
           Spacer(),
@@ -112,9 +131,9 @@ class _SearchState extends State<Search> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Search'),
-        backgroundColor: Color(0xFFe36387),
+        backgroundColor: isDarkMode ?  Colors.black87: Color(0xFFe36387),
       ),
-      backgroundColor: Color(0xFFffd5e5),
+      backgroundColor: isDarkMode ? Color(Asthetic.nightconvobg) : Color(0xFFffd5e5),
       body: Container(
         child: Column(
           children: <Widget>[
@@ -125,13 +144,16 @@ class _SearchState extends State<Search> {
                 children: <Widget>[
                   Expanded(
                       child: TextField(
+                        style: TextStyle(
+                          color: isDarkMode ? Colors.white : Colors.black87
+                        ),
                         controller: searchTextEditingController,
                         decoration: InputDecoration(
-                            fillColor: Color(0xFFffd5e5),
+                            fillColor: isDarkMode ? Color(Asthetic.nightconvobg) : Color(0xFFffd5e5),
                             filled: true,
                             contentPadding: EdgeInsets.all(12.0),
                             hintText: 'Search',
-                            hintStyle: TextStyle(color: Colors.black38 ),
+                            hintStyle: TextStyle(color: isDarkMode ? Colors.white : Colors.black38 ),
                             border: InputBorder.none
                         ),
                       )
@@ -146,12 +168,7 @@ class _SearchState extends State<Search> {
                     child: Container(
                       padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              const Color(0xFFa6dcef),
-                              const Color(0xFFddf3f5)
-                            ]
-                          ),
+                          color: Color(0xFFa6dcef),
                             borderRadius: BorderRadius.circular(40)
                         ),
                         child: Icon(FlutterIcons.search1_ant,)
@@ -166,10 +183,6 @@ class _SearchState extends State<Search> {
       ),
     );
   }
-}
-
-senduname(){
-  return secondname;
 }
 
 

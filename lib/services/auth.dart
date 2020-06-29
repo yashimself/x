@@ -2,10 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:x/models/user.dart';
 import 'package:x/services/sp.dart';
 
+bool isemailverified = false;
 
 class AuthService {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
 
   //create user obj based on Firebase user
 
@@ -26,11 +28,11 @@ class AuthService {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
-
+      await user.sendEmailVerification();
+      await checkverification(user);
       //create a new document for the user with uid
-
       //await DatabaseService(uid: user.uid).updateUserData('0', 'new crew', 100);
-      return _userFromFirebaseUser(user);
+       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
       return null;
@@ -42,11 +44,20 @@ class AuthService {
 
   Future SigninwithEmailandPass(String email, String password) async {
     try {
-      Sp.saveUserEmailsharedpreference(email);
+
       AuthResult result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+          email: email,
+          password: password
+      );
       FirebaseUser user = result.user;
-      return _userFromFirebaseUser(user);
+      await checkverification(user);
+      if(isemailverified)
+        return _userFromFirebaseUser(user);
+      else{
+        await user.sendEmailVerification();
+        return null;
+      }
+
     } catch (e) {
       print(e.toString());
       return null;
@@ -57,12 +68,15 @@ class AuthService {
 
   Future signOut() async {
     try {
+      Sp.saveUserLoggedinpreference(false);
+      Sp.saveuseremailverificationpreference(false);
       return await _auth.signOut();
     } catch (e) {
       print(e.toString());
       return null;
     }
   }
+
 
   //password reset
 
@@ -74,4 +88,20 @@ class AuthService {
       return null;
     }
   }
+
+  //check verification
+
+   Future checkverification(FirebaseUser user)async{
+    if (user.isEmailVerified == true)
+    {
+        isemailverified = true;
+        print(isemailverified);
+        await Sp.saveuseremailverificationpreference(true);
+    }
+    else{
+       await Sp.saveuseremailverificationpreference(false);
+    }
+  }
 }
+
+

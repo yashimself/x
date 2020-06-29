@@ -142,10 +142,12 @@ class _RegisterState extends State<Register> {
 
                       });
                       if (result == null) {
-                        setState(() {
-                          error = ' Please use valid email and password ';
-                          loading = false;
-                        });
+                        if(this.mounted){
+                          setState(() {
+                            error = ' Please use valid email and password ';
+                            loading = false;
+                          });
+                        }
                       }
                     }
                   }

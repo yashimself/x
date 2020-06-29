@@ -23,6 +23,7 @@ class DatabaseService {
         .add(userMap);
   }
 
+
   createChatRoom(String ChatRoomid, chatRoomMap){
     Firestore.instance
         .collection("ChatRoom")
@@ -46,14 +47,17 @@ class DatabaseService {
    return await Firestore.instance.collection("ChatRoom")
         .document(ChatroomId)
         .collection("chats")
-   .orderBy("time", descending: false)
+   .orderBy("time", descending: true)
         .snapshots();
   }
 
-  getChatrooms(String username){
-    return Firestore.instance
-        .collection("ChatRoom");
+  getChatrooms(String username)async{
+     return await Firestore.instance
+        .collection("ChatRoom")
+        .where("users",arrayContains: username)
+        .snapshots();
   }
+
 
 
 }

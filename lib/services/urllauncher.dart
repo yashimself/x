@@ -1,6 +1,6 @@
 import 'package:url_launcher/url_launcher.dart';
 
-launchURL(String s) async{
+launchURL() async{
   const url='https://github.com/yashimself/x';
   if (await canLaunch(url)) {
     await launch(url);

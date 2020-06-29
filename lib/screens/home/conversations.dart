@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:x/screens/home/search.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:x/services/database.dart';
+import 'package:x/shared/loading.dart';
 import 'package:x/shared/skeleton.dart';
+import 'package:x/screens/home/home.dart';
+
 
 
 class ConversationScreen extends StatefulWidget {
   final String ChatRoomId;
-  ConversationScreen({this.ChatRoomId});
+  final String secondname;
+  bool isDarkmode;
+  ConversationScreen({this.ChatRoomId,this.secondname,this.isDarkmode});
 
   @override
   _ConversationScreenState createState() => _ConversationScreenState();
@@ -19,13 +24,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
   DatabaseService databaseService = new DatabaseService();
   TextEditingController messageController = new TextEditingController();
 
-  String secondname = "";
-
-  getsecondname () {
-     setState(() {
-      secondname = senduname();
-    });
-  }
 
   Widget ChatMessageList(){
     return StreamBuilder(
@@ -36,7 +34,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
             itemBuilder: (context, index){
               return MessageTile(snapshot.data.documents[index].data["message"],
                   snapshot.data.documents[index].data["Sent_by"]==Constants.myName);
-            }) : Container();
+            }) : Loading();
       },
     );
   }
@@ -63,7 +61,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
         chatMessageStream = value;
       });
     });
-    getsecondname();
     super.initState();
   }
 
@@ -71,10 +68,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(secondname,),
-        backgroundColor: Colors.black12,
+        title: Text(secondname,
+        style: TextStyle(
+          color: Colors.white
+        ),),
+        backgroundColor: Colors.black87,
       ),
-      backgroundColor: Color(0xFF222831),
+      backgroundColor: isDarkMode ? Color(0xFF092532) : Color(0xFF89c9b8),
       body: Container(
         child: Stack(
           children: [
@@ -90,7 +90,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         child: TextField(
                           controller: messageController,
                           decoration: InputDecoration(
-                              fillColor: Color.fromRGBO(0xFFdd,0xFFf3,0xFFf5,0.5),
+                              fillColor: Color.fromRGBO(0xFF09,0xFF25,0xFF32,0.5),
                               filled: false,
                               contentPadding: EdgeInsets.all(12.0),
                               hintText: 'Message',
@@ -141,7 +141,7 @@ class MessageTile extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10,horizontal: 8),
         decoration: BoxDecoration(
-          color: isSentByMe ? Colors.amberAccent : Colors.blue,
+          color: isSentByMe ? Color(0xFF17706e) : Colors.blue,
           borderRadius: isSentByMe ? BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
@@ -154,7 +154,7 @@ class MessageTile extends StatelessWidget {
         ),
         child: Text(message,
         style: TextStyle(
-          color: isSentByMe ? Colors.black87 : Colors.white,
+          color: isSentByMe ? Colors.white : Colors.white,
           fontSize: 15
         ),
         ),

@@ -1,12 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:x/screens/home/conversations.dart';
 import 'package:x/screens/home/search.dart';
 import 'package:x/services/auth.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:x/services/database.dart';
+import 'package:x/services/push_notifications.dart';
+import 'package:x/services/urllauncher.dart';
 import 'package:x/shared/skeleton.dart';
 import 'package:x/services/sp.dart';
+import 'package:x/shared/colors.dart';
+
+bool isDarkMode = false;
 
 class Home extends StatefulWidget {
 
@@ -15,11 +21,34 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final AuthService _auth=AuthService();
+  DatabaseService databaseService = new DatabaseService();
+  Stream chatRoomStream;
+
+  Widget  chatRoomList(){
+    return StreamBuilder(
+        stream: chatRoomStream,
+        builder: (context, snapshot){
+          return snapshot.hasData ? ListView.builder(
+            itemCount: snapshot.data.documents.length,
+              itemBuilder: (context, index){
+              return ChatRoomTile(
+                snapshot.data.documents[index].data["chatroomId"]
+                    .toString().replaceAll("_", "")
+                    .replaceAll(Constants.myName, ""),
+                  snapshot.data.documents[index].data["chatroomId"],
+              );
+              }
+          ) : Container();
+        }
+    );
+}
 
   @override
   void initState() {
     getuserinfo();
+    Notifications().initialise();
     super.initState();
   }
   getuserinfo() async{
@@ -27,17 +56,23 @@ class _HomeState extends State<Home> {
       setState(() {
         Constants.myName = value;
       });
+      databaseService.getChatrooms(Constants.myName).then((value){
+        setState(() {
+          chatRoomStream = value;
+        });
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFf2aaaa),
+      key: _scaffoldKey,
+      backgroundColor: isDarkMode ? Color(Asthetic.nightconvobg) :  Color(Asthetic.daybg) ,
       appBar: AppBar(
         title: Text('X'),
         centerTitle: true,
-        backgroundColor: Color(0xFFe36387),
+        backgroundColor: isDarkMode ? Colors.black : Color(Asthetic.dayappbg),
         elevation: 5.0,
         actions: [
           FlatButton.icon(
@@ -53,44 +88,68 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      drawer: Drawer(
-        child: Container(
-          color: Color(0xFFa6dcef),
-          child: ListView(
-            children: <Widget>[
-           Builder(
-            builder:(context) => FlatButton.icon(
-             icon: Icon(
-              AntDesign.github,
-              color: Colors.black,
-      ),
-            label: Text(''),
-      onPressed: (){
-          Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text('Thanks for helping with the testing!'),
-            action: SnackBarAction(
-              label: 'Source Code',
-              onPressed: () {
-                _launchURL();
-              },
-            ),
-            duration: Duration(seconds: 1),
-          ));
-      Navigator.pop(context);
-      },
-
-    )
-          ),
-
-          ]
+      drawer: SafeArea(
+        child: Drawer(
+          child: Container(
+            color: isDarkMode ? Colors.grey[800] : Color(Asthetic.daybg),
+            child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.center,
+                        child: FlatButton.icon(
+                          onPressed: (){
+                            setState(() {
+                              isDarkMode ? isDarkMode=false : isDarkMode=true;
+                            });
+                            _scaffoldKey.currentState.showSnackBar(
+                            SnackBar(
+                            content: isDarkMode ? Text('Dark Mode Activated') : Text('Dark Mode deactivated') ,
+                            duration: Duration(seconds: 2),
+                            )
+                            );
+                            Navigator.pop(context);
+                          }, 
+                          icon: Icon(FlutterIcons.theme_light_dark_mco), 
+                          label: Text(''),
+                          ),
+                        ),
+                    ],
+                  ),
+                  ListTile(
+                    onTap: ()
+                    {
+                      _scaffoldKey.currentState.showSnackBar(
+                          SnackBar(
+                            content: Text('Thanks for helping with the testing!'),
+                            action: SnackBarAction(
+                              label: 'Source Code',
+                              onPressed: () {
+                                launchURL();
+                          },
+                        ),
+                        duration: Duration(seconds: 2),
+                      ));
+                      Navigator.pop(context);
+                    },
+                   title: Icon(
+                     AntDesign.github,
+                     color: Colors.black,
+                   ),
+    ),
+                ],
+              ),
           ),
         ),
       ),
-      body: Center(
-        child: Text('Hello '+Constants.myName+"!",
-        style: TextStyle(fontSize: 30,
-        color: Color(0xFF222831),),
-      ),),
+
+      body:
+          chatRoomList(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.search),
         onPressed: (){
@@ -112,11 +171,64 @@ class _HomeState extends State<Home> {
   }
 }
 
-_launchURL() async {
-  const url = 'https://github.com/yashimself/x';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
+class ChatRoomTile extends StatelessWidget {
+
+  final String username;
+  final String chatRoomId;
+  ChatRoomTile(this.username,this.chatRoomId);
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+      onPressed: (){
+        Navigator.push(context, PageRouteBuilder(
+          pageBuilder: (context,animation,secondaryAnimation) => ConversationScreen(
+              ChatRoomId: chatRoomId,
+            secondname: username,
+            isDarkmode: isDarkMode,
+          ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var begin = Offset(0.0, 1.0);
+            var end = Offset.zero;
+            var curve = Curves.ease;
+
+            var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        )
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 18, vertical: 20),
+        child: Row(
+          children: <Widget>[
+            Container(
+              height: 40,
+              width: 40,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                color: Colors.white,
+              ),
+              child: Text(username.substring(0,1).toUpperCase(),
+              style: TextStyle(
+                fontSize: 20
+              ),),
+            ),
+            SizedBox(width: 10,),
+            Text(username,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontSize: 20,
+              color: isDarkMode ? Colors.white : Colors.black87
+            ),),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -34,22 +34,25 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return loading ? Loading(): Scaffold(
-        backgroundColor: Color(0xFFddf3f5),
+        backgroundColor: Color(0xFFc7e2b2),
         appBar: AppBar(
-        backgroundColor: Color(0xFFa6dcef),
+        backgroundColor: Color(0xFFe1ffc2),
         elevation: 0.0,
-        title: Text('Sign in'),
+        title: Text('Sign in',
+        style: TextStyle(
+          color: Color(0xFF222831)
+        ),),
           actions: [
           FlatButton.icon(
               onPressed: (){
                 widget.toggleView();
               },
               icon: Icon(Icons.person,
-                color: Colors.white,
+                color: Color(0xFF222831),
               ),
               label: Text('Register',
                 style: TextStyle(
-                    color: Colors.white
+                    color: Color(0xFF222831)
                 ),
               ),
               )
@@ -81,7 +84,8 @@ class _SignInState extends State<SignIn> {
                      ),
                         SizedBox(height: 20.0),
                         TextFormField(
-                        decoration: textInputDecoration.copyWith(hintText: 'Email'),
+                        decoration: textInputDecoration.copyWith(hintText: 'Email',
+                        ),
                         validator: (val) {
                           return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(val) || val.isNotEmpty ? null : 'Enter an email';
                         },
@@ -112,7 +116,7 @@ class _SignInState extends State<SignIn> {
                         child: FlatButton(
                           child: Text('Forgot Password?',
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Color(0xFF222831),
                             fontSize: 12,
                           ),
                           ),
@@ -144,11 +148,11 @@ class _SignInState extends State<SignIn> {
 
                     SizedBox(height: 8),
                     RaisedButton(
-                      splashColor: Colors.white,
-                        color: Color(0xFFa6dcef),
+                      splashColor: Color(0xFFc7e2b2),
+                        color: Color(0xFFe1ffc2),
                         child: Text('Sign in',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Color(0xFF222831),
                           ),
                         ),
 
@@ -161,32 +165,37 @@ class _SignInState extends State<SignIn> {
                             await databaseService.dbDownstreamEmail(email).then((val){
                               Userinfo = val;
                              Sp.saveUsernamesharedpreference(Userinfo.documents[0].data["name"]);
+                              Sp.saveUserEmailsharedpreference(email);
                             });
                             dynamic result = await _auth.SigninwithEmailandPass(email, password);
                             if (result == null) {
-                              setState(() {
-                                error = ' Please use valid email and password ';
-                                loading = false;
-                              });
+                              if(this.mounted){
+                                setState(() {
+                                  error = ' Please use valid email and password ';
+                                  loading = false;
+                                });
+                              }
+                              loading = false;
+
                             }else{
                               Sp.saveUserLoggedinpreference(true);
-
+                              loading = false;
                             }
 
                           }
                         }
                     ),
-                      SizedBox(height: 8,),
-                      RaisedButton(onPressed: (){
-
-                    },
-                      splashColor: Colors.white,
-                      color: Color(0xFFa6dcef),
-                      child: Text('Sign in with Google',
-                      style: TextStyle(color: Colors.white,
-                      ),
-                      ),
-                    ),
+//                      SizedBox(height: 8,),
+//                      RaisedButton(onPressed: (){
+//
+//                    },
+//                      splashColor: Color(0xFFc7e2b2),
+//                      color: Color(0xFFe1ffc2),
+//                      child: Text('Sign in with Google',
+//                      style: TextStyle(color: Color(0xFF222831),
+//                      ),
+//                      ),
+//                    ),
                     SizedBox(height: 20.0,),
                       Text(error,
                       style: TextStyle(

@@ -5,6 +5,7 @@ class Sp{
   static String userloggedinspkey = "ISLOGGEDIN";
   static String spusernamekey = "USERNAMEKEY";
   static String spuseremailkey = "USEREMAILKEY";
+  static String useremailverificationkey = "ISVERIFIED";
 
   //userloggedin
 
@@ -28,6 +29,11 @@ class Sp{
     return await prefs.setString(spuseremailkey, userEmail);
   }
 
+  static Future<bool> saveuseremailverificationpreference(bool toggle) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await prefs.setBool(useremailverificationkey, toggle);
+  }
+
   //****************Data retrieval****************
 
   static Future<bool> getUserLoggedinpreference() async{
@@ -43,6 +49,11 @@ class Sp{
   static Future<String> getUserEmailsharedpreference() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return await prefs.getString(spuseremailkey);
+  }
+
+  static Future<bool> getuseremailverificationpreference() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await prefs.getBool(useremailverificationkey);
   }
 
 
