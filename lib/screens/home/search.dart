@@ -108,7 +108,10 @@ class _SearchState extends State<Search> {
               setState(() {
                 secondname = userName;
               });
-              CreateChatRoomandStartconvo(userName);
+              if(userName!=Constants.myName)
+                CreateChatRoomandStartconvo(userName);
+              else
+                return null;
             },
             child: Container(
               decoration: BoxDecoration(
@@ -131,9 +134,9 @@ class _SearchState extends State<Search> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Search'),
-        backgroundColor: isDarkMode ?  Colors.black87: Color(0xFFe36387),
+        backgroundColor: isDarkMode ? Colors.black87 : Color(0xFF086972),
       ),
-      backgroundColor: isDarkMode ? Color(Asthetic.nightconvobg) : Color(0xFFffd5e5),
+      backgroundColor: isDarkMode ? Color(Asthetic.nightconvobg) : Color(0xFFcceabb),
       body: Container(
         child: Column(
           children: <Widget>[
@@ -149,7 +152,7 @@ class _SearchState extends State<Search> {
                         ),
                         controller: searchTextEditingController,
                         decoration: InputDecoration(
-                            fillColor: isDarkMode ? Color(Asthetic.nightconvobg) : Color(0xFFffd5e5),
+                            fillColor: isDarkMode ? Color(Asthetic.nightconvobg) : Color(0xFFcceabb),
                             filled: true,
                             contentPadding: EdgeInsets.all(12.0),
                             hintText: 'Search',

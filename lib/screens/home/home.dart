@@ -68,11 +68,11 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: isDarkMode ? Color(Asthetic.nightconvobg) :  Color(Asthetic.daybg) ,
+      backgroundColor: isDarkMode ? Color(Asthetic.nightconvobg) :  Color(0xFFf9c49a) ,
       appBar: AppBar(
         title: Text('X'),
         centerTitle: true,
-        backgroundColor: isDarkMode ? Colors.black : Color(Asthetic.dayappbg),
+        backgroundColor: isDarkMode ? Colors.black : Color(0xFF086972),
         elevation: 5.0,
         actions: [
           FlatButton.icon(
@@ -91,7 +91,7 @@ class _HomeState extends State<Home> {
       drawer: SafeArea(
         child: Drawer(
           child: Container(
-            color: isDarkMode ? Colors.grey[800] : Color(Asthetic.daybg),
+            color: isDarkMode ? Colors.grey[800] : Color(0xFF679b9b),
             child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
