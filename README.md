@@ -15,7 +15,7 @@
 
 # Screenshots
 
-![Screenshot 1|1920x1080,50%](assets/screenshots/Screenshot_20200630-002423_framed.png)
+![Screenshot 1|480x360,50%](assets/screenshots/Screenshot_20200630-002423_framed.png)
 <img src="assets/screenshots/Screenshot_20200630-002423_framed.png" alt="Screenshot 1" height:"120" width: "80">
 <img src="assets/screenshots/Screenshot_20200630-002426_framed.png" alt="Screenshot 2" height:"120" width: "80">
 <img src="assets/screenshots/Screenshot_20200630-004428_framed.png" alt="Screenshot 3" height:"120" width: "80">
