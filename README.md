@@ -15,13 +15,13 @@
 
 # Screenshots
 
-<img src="assets/screenshots/Screenshot_20200630-002423_framed.png">
-<img src="assets/screenshots/Screenshot_20200630-002426_framed.png">
-<img src="assets/screenshots/Screenshot_20200630-004428_framed.png">
-<img src="assets/screenshots/Screenshot_20200630-004432_framed.png">
-<img src="assets/screenshots/Screenshot_20200630-002519_framed.png">
-<img src="assets/screenshots/Screenshot_20200630-004708_framed.png">
-<img src="assets/screenshots/Screenshot_20200630-002555_framed.png">
+<img src="assets/screenshots/Screenshot_20200630-002423_framed.png" height:"80" width: "80">
+<img src="assets/screenshots/Screenshot_20200630-002426_framed.png" height:"80" width: "80">
+<img src="assets/screenshots/Screenshot_20200630-004428_framed.png" height:"80" width: "80">
+<img src="assets/screenshots/Screenshot_20200630-004432_framed.png" height:"80" width: "80">
+<img src="assets/screenshots/Screenshot_20200630-002519_framed.png" height:"80" width: "80">
+<img src="assets/screenshots/Screenshot_20200630-004708_framed.png" height:"80" width: "80">
+<img src="assets/screenshots/Screenshot_20200630-002555_framed.png" height:"80" width: "80">
 
 # Getting Started
 
@@ -47,7 +47,7 @@ To distribute app through Play Store, a payment of $25 is needed to create a dev
 # Developers
 
 <p>
-<h3>Dependencies?<h3>
+<h3>Dependencies?</h3>
 Follow this guide :
 <br>
 <a href="https://flutter.dev/docs/get-started/install">Flutter and Dart SDK</a>
