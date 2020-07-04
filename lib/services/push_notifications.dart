@@ -1,38 +1,49 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:x/services/urllauncher.dart';
-
+import 'package:x/models/user.dart';
 
 class Notifications {
- final FirebaseMessaging _fcm = FirebaseMessaging();
+  final FirebaseMessaging fcm = FirebaseMessaging();
+  final String uid;
 
- Future initialise() async{
-   if(Platform.isIOS){
-     _fcm.requestNotificationPermissions(IosNotificationSettings());
-   }
+  Notifications({this.uid});
 
-   _fcm.configure(
-     onMessage: (Map<String, dynamic> message)async{
-       print('onMessage: $message');
-     },
+  Future initialise() async {
+    if (Platform.isIOS) {
+      fcm.requestNotificationPermissions(IosNotificationSettings());
+    }
 
-     onLaunch: (Map<String, dynamic> message)async{
-       print('onMessage: $message');
-     },
+    fcm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('onMessage: $message');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('onMessage: $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('onMessage: $message');
+      },
+    );
 
-     onResume: (Map<String, dynamic> message)async{
-       print('onMessage: $message');
-     },
-   );
-
-   _fcm.requestNotificationPermissions(
-     const IosNotificationSettings(sound: true, badge: true, alert: true)
-   );
-
-   _fcm.getToken().then((token) {
-     print(token);
-     return token;
-   });
-
+    fcm.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+    fcm.getToken().then((token) async {
+      print(token);
+      //await updatetoken(token);
+      return token;
+    }).catchError((onError) {
+      print(onError);
+    });
+  }
 }
-}
+
+// Future updatetoken(String token) async {
+//   print(User().getuid());
+//   await Firestore.instance
+//       .collection('users')
+//       .document(User().getuid())
+//       .updateData({'pushToken': token}).catchError((onError) {
+//     print(onError);
+//   });
+// }

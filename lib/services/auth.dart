@@ -1,13 +1,15 @@
+import 'package:x/screens/authenticate/signinwithphonenumber.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:x/models/user.dart';
+import 'package:x/services/push_notifications.dart';
 import 'package:x/services/sp.dart';
+import 'package:flutter/material.dart';
 
 bool isemailverified = false;
 
 class AuthService {
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  TextEditingController _codeController = new TextEditingController();
 
   //create user obj based on Firebase user
 
@@ -18,8 +20,7 @@ class AuthService {
   //auth change user stream
 
   Stream<User> get user {
-    return _auth.onAuthStateChanged
-        .map(_userFromFirebaseUser);
+    return _auth.onAuthStateChanged.map(_userFromFirebaseUser);
   }
 
 //register with email and password
@@ -32,38 +33,64 @@ class AuthService {
       await checkverification(user);
       //create a new document for the user with uid
       //await DatabaseService(uid: user.uid).updateUserData('0', 'new crew', 100);
-       return _userFromFirebaseUser(user);
+      return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
       return null;
     }
   }
-
 
   //Sign in with email and password
 
   Future SigninwithEmailandPass(String email, String password) async {
     try {
-
       AuthResult result = await _auth.signInWithEmailAndPassword(
-          email: email,
-          password: password
-      );
+          email: email, password: password);
       FirebaseUser user = result.user;
       await checkverification(user);
-      if(isemailverified)
+      if (isemailverified)
         return _userFromFirebaseUser(user);
-      else{
+      else {
         await user.sendEmailVerification();
-        return null;
+        return _userFromFirebaseUser(user);
       }
-
     } catch (e) {
       print(e.toString());
       return null;
     }
   }
 
+  Future siginwithphone(String phone_number) async {
+    _auth.verifyPhoneNumber(
+        phoneNumber: phone_number,
+        timeout: Duration(seconds: 60),
+        verificationCompleted: (AuthCredential authCredential) async {
+          await _auth
+              .signInWithCredential(authCredential)
+              .then((AuthResult result) {
+            return _userFromFirebaseUser(result.user);
+          }).catchError((onError) {
+            print(onError);
+          });
+        },
+        verificationFailed: (AuthException authException) {
+          print(authException.message);
+        },
+        codeSent: (String verificationId, [int forceResendingToken]) {
+          AuthCredential credential = PhoneAuthProvider.getCredential(
+              verificationId: verificationId, smsCode: password.text);
+          _auth.signInWithCredential(credential).then((AuthResult result) {
+            return _userFromFirebaseUser(result.user);
+          }).catchError((onError) {
+            print(onError.toString());
+          });
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          verificationId = verificationId;
+          print(verificationId);
+          print("Timeout");
+        });
+  }
   //sign out
 
   Future signOut() async {
@@ -77,13 +104,12 @@ class AuthService {
     }
   }
 
-
   //password reset
 
   Future forgotpass(String email) async {
     try {
       return await _auth.sendPasswordResetEmail(email: email);
-    }catch (e) {
+    } catch (e) {
       print(e.toString());
       return null;
     }
@@ -91,17 +117,13 @@ class AuthService {
 
   //check verification
 
-   Future checkverification(FirebaseUser user)async{
-    if (user.isEmailVerified == true)
-    {
-        isemailverified = true;
-        print(isemailverified);
-        await Sp.saveuseremailverificationpreference(true);
-    }
-    else{
-       await Sp.saveuseremailverificationpreference(false);
+  Future checkverification(FirebaseUser user) async {
+    if (user.isEmailVerified == true) {
+      isemailverified = true;
+      print(isemailverified);
+      await Sp.saveuseremailverificationpreference(true);
+    } else {
+      await Sp.saveuseremailverificationpreference(false);
     }
   }
 }
-
-
