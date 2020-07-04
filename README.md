@@ -8,7 +8,7 @@
 <img src="https://img.shields.io/badge/license-GPT-blue">
 
 <p>
-  <a href="https://github.com/yashimself/x/releases/download/v0.0.1/app-release.apk"> <h3> Download </a>
+  <a href="https://github.com/yashimself/x/releases/download/v0.0.3/app-release.apk"> <h3> Download </a>
 </p>
 
 </p>
