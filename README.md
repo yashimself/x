@@ -54,6 +54,18 @@ You may also need <a href='https://developer.android.com/studio'>Android Studio<
 <br>
 <h3>How to build?</h3>
 <br>
-Clone my repo to a directory of your choice. Open terminal and ```cd``` into that directory. In root directory of the project use command ```flutter run -d <your_device>``` or just ```flutter run```.
+Clone my repo to a directory of your choice. Open terminal and 
+```
+cd
+``` 
+into that directory. In root directory of the project use command 
+```
+flutter run -d <your_device>
+```
+or just
+```
+flutter run
+```
+.
 </p>
 
