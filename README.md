@@ -4,6 +4,7 @@
 <p align="center">
   
 ![CI](https://github.com/yashimself/x/workflows/CI/badge.svg?branch=master&event=push) 
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/yashimself/x)
 <img src="https://img.shields.io/badge/Platform-flutter-blue">
 <img src="https://img.shields.io/badge/license-GPT-blue">
 
