@@ -1,6 +1,7 @@
 import 'package:x/screens/authenticate/signinwithphonenumber.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:x/models/user.dart';
+import 'package:x/services/database.dart';
 import 'package:x/services/push_notifications.dart';
 import 'package:x/services/sp.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ bool isemailverified = false;
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  DatabaseService databaseService = new DatabaseService();
   TextEditingController _codeController = new TextEditingController();
 
   //create user obj based on Firebase user
@@ -24,15 +26,23 @@ class AuthService {
   }
 
 //register with email and password
-  Future RegisterwithEmailandPass(String email, String password) async {
+  Future RegisterwithEmailandPass(
+      String email, String password, String name) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      Map<String, String> userInfo = {
+        "email": email,
+        "name": name,
+        "pushToken": "",
+      };
       FirebaseUser user = result.user;
       await user.sendEmailVerification();
+      await DatabaseService(uid: user.uid).dbUpstream(userInfo);
       await checkverification(user);
       //create a new document for the user with uid
       //await DatabaseService(uid: user.uid).updateUserData('0', 'new crew', 100);
+      await Notifications(uid: user.uid).initialise();
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
@@ -47,11 +57,13 @@ class AuthService {
       AuthResult result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
+      await Notifications(uid: user.uid).initialise();
       await checkverification(user);
       if (isemailverified)
         return _userFromFirebaseUser(user);
       else {
         await user.sendEmailVerification();
+        
         return _userFromFirebaseUser(user);
       }
     } catch (e) {

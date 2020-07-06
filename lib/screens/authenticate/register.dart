@@ -132,17 +132,15 @@ class _RegisterState extends State<Register> {
                         setState(() {
                           loading = true;
                         });
-                        dynamic result = await _auth.RegisterwithEmailandPass(email, password).then((val){
 
-                          Map<String, String> userInfo = {
-                            "email": email,
-                            "name" : name,
-                            "pushToken" : "",
-                          };
+                        
+                        dynamic result = await _auth.RegisterwithEmailandPass(email, password, name).then((val){
+
+                          
                           Sp.saveUserEmailsharedpreference(email);
                           Sp.saveUsernamesharedpreference(name);
 
-                          databaseService.dbUpstream(userInfo);
+                          
 
                           Sp.saveUserLoggedinpreference(true);
 

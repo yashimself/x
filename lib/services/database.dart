@@ -21,8 +21,11 @@ class DatabaseService {
         .getDocuments();
   }
 
-  dbUpstream(Map userMap) {
-    Firestore.instance.collection("users").add(userMap);
+  dbUpstream(Map userMap) async{
+    await Firestore.instance
+    .collection("users")
+    .document(uid)
+    .setData(userMap);
   }
 
   createChatRoom(String ChatRoomid, chatRoomMap) {

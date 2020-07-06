@@ -33,8 +33,7 @@ class _HomeState extends State<Home> {
     return StreamBuilder(
         stream: chatRoomStream,
         builder: (context, snapshot) {
-          return snapshot.hasData
-              ? ListView.builder(
+          return snapshot.hasData ? ListView.builder(
                   itemCount: snapshot.data.documents.length,
                   itemBuilder: (context, index) {
                     return ChatRoomTile(
@@ -44,15 +43,14 @@ class _HomeState extends State<Home> {
                           .replaceAll(Constants.myName, ""),
                       snapshot.data.documents[index].data["chatroomId"],
                     );
-                  })
-              : Container();
+                  }) : Container();
         });
   }
 
   @override
   void initState() {
     getuserinfo();
-    Notifications().initialise();
+    
     super.initState();
   }
 

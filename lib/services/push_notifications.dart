@@ -2,11 +2,11 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:x/models/user.dart';
+import 'package:x/services/auth.dart';
 
 class Notifications {
-  final FirebaseMessaging fcm = FirebaseMessaging();
   final String uid;
-
+  final FirebaseMessaging fcm = FirebaseMessaging();
   Notifications({this.uid});
 
   Future initialise() async {
@@ -30,7 +30,7 @@ class Notifications {
         const IosNotificationSettings(sound: true, badge: true, alert: true));
     fcm.getToken().then((token) async {
       print(token);
-      //await updatetoken(token);
+      await updatetoken(token,uid);
       return token;
     }).catchError((onError) {
       print(onError);
@@ -38,12 +38,11 @@ class Notifications {
   }
 }
 
-// Future updatetoken(String token) async {
-//   print(User().getuid());
-//   await Firestore.instance
-//       .collection('users')
-//       .document(User().getuid())
-//       .updateData({'pushToken': token}).catchError((onError) {
-//     print(onError);
-//   });
-// }
+Future updatetoken(String token, String uid) async {
+  await Firestore.instance
+      .collection('users')
+      .document(uid)
+      .updateData({'pushToken': token}).catchError((onError) {
+    print(onError);
+  });
+}
