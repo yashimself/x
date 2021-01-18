@@ -1,6 +1,6 @@
 <img src="assets/icons/hp.png">
 
-# x
+# x [Archived]
 <p align="center">
   
 ![CI](https://github.com/yashimself/x/workflows/CI/badge.svg?branch=master&event=push) 
